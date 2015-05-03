@@ -2,6 +2,14 @@
 
 one:
   name: MyString
+  slug: MyString
+  salt_masterkey: MyString
+  pubkey_user: MyString
+  privkey_user_enc: MyString
 
 two:
   name: MyString
+  slug: MyString
+  salt_masterkey: MyString
+  pubkey_user: MyString
+  privkey_user_enc: MyString

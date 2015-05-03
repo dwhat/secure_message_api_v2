@@ -5,5 +5,25 @@
   <%= @user.name %>
 </p>
 
+<p>
+  <strong>Slug:</strong>
+  <%= @user.slug %>
+</p>
+
+<p>
+  <strong>Salt masterkey:</strong>
+  <%= @user.salt_masterkey %>
+</p>
+
+<p>
+  <strong>Pubkey user:</strong>
+  <%= @user.pubkey_user %>
+</p>
+
+<p>
+  <strong>Privkey user enc:</strong>
+  <%= @user.privkey_user_enc %>
+</p>
+
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
