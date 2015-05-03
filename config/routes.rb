@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
+  get 'recipient/pubkey'
+
   resources :users, :defaults => { :format => :json }
+
+  get 'users/pubkey/:id' => 'users#pubkey', :defaults => { :format => :json }
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
