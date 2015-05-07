@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150503175230) do
+ActiveRecord::Schema.define(version: 20150507180156) do
 
   create_table "friendly_id_slugs", force: true do |t|
     t.string   "slug",                      null: false
@@ -25,6 +25,19 @@ ActiveRecord::Schema.define(version: 20150503175230) do
   add_index "friendly_id_slugs", ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id"
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
+
+  create_table "messages", force: true do |t|
+    t.string   "sender"
+    t.text     "cipher"
+    t.integer  "iv"
+    t.string   "key_recipient_enc"
+    t.text     "sig_recipient"
+    t.datetime "timestamp"
+    t.string   "recipient"
+    t.text     "sig_service"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", force: true do |t|
     t.string   "name"
