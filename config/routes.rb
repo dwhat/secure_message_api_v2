@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  resources :messages, :defaults => { :format => :json }
-  resources :users, :defaults => { :format => :json }
+  resources :users, :defaults => { :format => :json } do
+    resources :messages, :defaults => { :format => :json }
+  end
 
   get 'users/pubkey/:id' => 'users#pubkey', :defaults => { :format => :json }
 
