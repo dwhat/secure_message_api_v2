@@ -40,3 +40,4 @@ gem 'spring',        group: :development
 
 # no id in uri
 gem 'friendly_id'
+
