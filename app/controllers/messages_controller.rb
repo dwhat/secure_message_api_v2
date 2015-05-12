@@ -4,8 +4,25 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.json
   def index
-   # @messages = Message.find_by_recipient(params[:user_id])
-    @messages = Message.all
+    server_timestamp = Time.now.to_i
+    server_timestamp_late = server_timestamp + 300
+    server_timestamp_early = server_timestamp - 300
+
+    recipient_timestamp = request.headers['HTTP_TIMESTAMP'].to_i
+    sig_user = request.headers['HTTP_sig_user']
+
+    # Zeit Check
+    if (server_timestamp_early .. server_timestamp_late).include?(recipient_timestamp)
+      # Signatur Check
+      digest = OpenSSL::Digest::SHA256.new
+      #if key.verify digest, signature, document
+        @messages = Message.where(:recipient => params[:user_id])
+      else
+        #Fehlermeldung Inkorrekte Signatur
+      end
+    else
+       #Fehlermeldung Time passt nicht
+    end
   end
 
   # GET /messages/1
