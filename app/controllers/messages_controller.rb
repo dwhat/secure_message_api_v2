@@ -20,7 +20,7 @@ class MessagesController < ApplicationController
         #Fehlermeldung Inkorrekte Signatur
       #end
     else
-       #Fehlermeldung Time passt nicht
+      # Fehlermeldung Timestamp inkorrekt
     end
   end
 
