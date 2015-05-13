@@ -4,22 +4,21 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.json
   def index
-    server_timestamp = Time.now.to_i
-    server_timestamp_late = server_timestamp + 300
-    server_timestamp_early = server_timestamp - 300
 
-    recipient_timestamp = request.headers['HTTP_TIMESTAMP'].to_i
     sig_user = request.headers['HTTP_sig_user']
+    recipient_timestamp = request.headers['HTTP_TIMESTAMP'].to_i
 
-    # Zeit Check
-    if (server_timestamp_early .. server_timestamp_late).include?(recipient_timestamp)
+    if checkTimestamp(recipient_timestamp)
       # Signatur Check
       digest = OpenSSL::Digest::SHA256.new
-      #if key.verify digest, signature, document
+      @user = User.find_by_name(params[:user_id])
+      key = OpenSSL::PKey::RSA.new()
+
+     # if key.verify digest, sig_user, document
         @messages = Message.where(:recipient => params[:user_id])
-      else
+      #else
         #Fehlermeldung Inkorrekte Signatur
-      end
+      #end
     else
        #Fehlermeldung Time passt nicht
     end
@@ -44,15 +43,21 @@ class MessagesController < ApplicationController
   def create
     @message = Message.new(message_params)
 
+    sender_timestamp = request.headers['HTTP_TIMESTAMP'].to_i
 
-    respond_to do |format|
-      if @message.save
-        format.html { redirect_to [:user,@message], notice: 'Message was successfully created.' }
-        format.json { render :show, status: :created, location: [:user,@message] }
-      else
-        format.html { render :new }
-        format.json { render json: @message.errors, status: :unprocessable_entity }
+    if checkTimestamp(sender_timestamp)
+
+      respond_to do |format|
+        if @message.save
+          format.html { redirect_to [:user,@message], notice: 'Message was successfully created.' }
+          format.json { render :show, status: :created, location: [:user,@message] }
+        else
+          format.html { render :new }
+          format.json { render json: @message.errors, status: :unprocessable_entity }
+        end
       end
+    else
+      # Fehler Timestamp passt nicht
     end
   end
 
