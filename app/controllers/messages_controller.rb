@@ -45,7 +45,7 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
 
-      if checkTimestamp(@message.timestamp)
+      if checkTimestamp(@message.timestamp.to_i)
           if @message.save
             format.html { redirect_to @message, notice: 'User was successfully created.' }
             format.json { render json: @message }
