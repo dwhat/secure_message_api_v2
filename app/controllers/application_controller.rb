@@ -4,12 +4,12 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   helper_method :checkTimestamp
 
-  def checkTimestamp(recipient_timestamp)
+  def checkTimestamp(timestamp)
     server_timestamp = Time.now.to_i
     server_timestamp_late = server_timestamp + 300
     server_timestamp_early = server_timestamp - 300
 
-    if (server_timestamp_early .. server_timestamp_late).include?(recipient_timestamp)
+    if (server_timestamp_early .. server_timestamp_late).include?(timestamp)
       return true
     else
       return false

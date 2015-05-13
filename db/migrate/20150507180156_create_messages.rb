@@ -6,7 +6,7 @@ class CreateMessages < ActiveRecord::Migration
       t.integer :iv
       t.string :key_recipient_enc
       t.text :sig_recipient
-      t.timestamp :timestamp
+      t.string :timestamp
       t.string :recipient
       t.text :sig_service
 

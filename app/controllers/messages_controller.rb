@@ -43,21 +43,20 @@ class MessagesController < ApplicationController
   def create
     @message = Message.new(message_params)
 
-    sender_timestamp = request.headers['HTTP_TIMESTAMP'].to_i
+    respond_to do |format|
 
-    if checkTimestamp(sender_timestamp)
+      if checkTimestamp(@message.timestamp)
+          if @message.save
+            format.html { redirect_to @message, notice: 'User was successfully created.' }
+            format.json { render json: @message }
+          else
+            format.html { render :new }
+            format.json { render :json => {:message => "Irgendwas passt nicht"} }
+          end
 
-      respond_to do |format|
-        if @message.save
-          format.html { redirect_to [:user,@message], notice: 'Message was successfully created.' }
-          format.json { render :show, status: :created, location: [:user,@message] }
-        else
-          format.html { render :new }
-          format.json { render json: @message.errors, status: :unprocessable_entity }
-        end
+      else
+        format.json { render :json => {:message => "Timestamp passt nicht"} }
       end
-    else
-      # Fehler Timestamp passt nicht
     end
   end
 

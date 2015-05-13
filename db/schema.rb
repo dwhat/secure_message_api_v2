@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20150507180156) do
     t.integer  "iv"
     t.string   "key_recipient_enc"
     t.text     "sig_recipient"
-    t.datetime "timestamp"
+    t.string   "timestamp"
     t.string   "recipient"
     t.text     "sig_service"
     t.datetime "created_at"
