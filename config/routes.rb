@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   match '', to: 'users#create', via: [:post], :defaults => {:format => :json }
   match '', to: 'users#index', via: [:get], :defaults => {:format => :json }
   match ':id', to: 'users#show', via: [:get], :defaults => {:format => :json }
+  match ':id', to: 'users#destroy', via: [:delete], :defaults => {:format => :json }
   match ':id/pubkey', to: 'users#pubkey', via: [:get], :defaults => {:format => :json }
   match ':user_id/messages', to: 'messages#index', via: [:get],  :defaults => {:format => :json }
   match ':user_id/messages', to: 'messages#create', via: [:post],  :defaults => {:format => :json }
