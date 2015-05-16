@@ -36,7 +36,7 @@ class UsersController < ApplicationController
       else
         if @user.save
           format.html { redirect_to @user, notice: 'User was successfully created.' }
-          format.json { render json: @status = '{"200"}'  }
+          format.json { render json: @status = '200'  }
         else
           format.html { render :new }
           format.json { render json: @user.errors, status: :unprocessable_entity }
