@@ -32,11 +32,11 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     respond_to do |format|
       if User.exists?(name: @user.name)
-        format.json { render json: '100', status: :unprocessable_entity }
+        format.json { render json: @status = '{"status":"100"}' }
       else
         if @user.save
           format.html { redirect_to @user, notice: 'User was successfully created.' }
-          format.json { render json: '200'  }
+          format.json { render json: @status = '{"status":"200"}' }
         else
           format.html { render :new }
           format.json { render json: @user.errors, status: :unprocessable_entity }
@@ -65,7 +65,7 @@ class UsersController < ApplicationController
     @user.destroy
     respond_to do |format|
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
-      format.json { render json: @status = '{"200"}' }
+      format.json { render json: @status = '{"status":"200"}' }
     end
   end
 
