@@ -48,14 +48,14 @@ class MessagesController < ApplicationController
       if checkTimestamp(@message.timestamp.to_i)
           if @message.save
             format.html { redirect_to @message, notice: 'User was successfully created.' }
-            format.json { render json: @message }
+            format.json { render json: @status = '{"status":"200"}'}
           else
             format.html { render :new }
-            format.json { render :json => {:message => "Irgendwas passt nicht"} }
+            format.json { render json: @status = '{"status":"500"}' }
           end
 
       else
-        format.json { render :json => {:message => "Timestamp passt nicht"} }
+        format.json { render json: @status = '{"status":"502"}'}
       end
     end
   end

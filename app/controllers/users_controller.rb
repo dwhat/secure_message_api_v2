@@ -32,7 +32,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     respond_to do |format|
       if User.exists?(name: @user.name)
-        format.json { render json: @status = '{"status":"100"}' }
+        format.json { render json: @status = '{"status":"501"}' }
       else
         if @user.save
           format.html { redirect_to @user, notice: 'User was successfully created.' }
