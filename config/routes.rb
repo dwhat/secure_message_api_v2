@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   match ':id', to: 'users#destroy', via: [:delete], :defaults => {:format => :json }
   match ':id/pubkey', to: 'users#pubkey', via: [:get], :defaults => {:format => :json }
   match ':user_id/messages', to: 'messages#index', via: [:get],  :defaults => {:format => :json }
-  match ':user_id/messages', to: 'messages#create', via: [:post],  :defaults => {:format => :json }
+  match 'messages', to: 'messages#create', via: [:post],  :defaults => {:format => :json }
 
 
 
