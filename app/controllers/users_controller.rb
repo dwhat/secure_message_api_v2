@@ -39,7 +39,7 @@ class UsersController < ApplicationController
           format.json { render json: @status = '{"status":"200"}' }
         else
           format.html { render :new }
-          format.json { render json: @user.errors, status: :unprocessable_entity }
+          format.json { render json: @status = '{"status":"500"}' }
         end
       end
     end

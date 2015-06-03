@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20150507180156) do
   create_table "messages", force: true do |t|
     t.string   "sender"
     t.text     "cipher"
-    t.integer  "iv"
+    t.string   "iv"
     t.string   "key_recipient_enc"
     t.text     "sig_recipient"
     t.string   "timestamp"

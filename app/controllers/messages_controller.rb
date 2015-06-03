@@ -4,23 +4,36 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.json
   def index
-
-    sig_user = request.headers['HTTP_sig_user']
-    recipient_timestamp = request.headers['HTTP_TIMESTAMP'].to_i
+    recipient_timestamp = params[:timestamp].to_i
+    puts params[:sig_user]
+    document = params[:user_id].to_s+recipient_timestamp.to_s
+    sig_user = Base64.strict_decode64(params[:sig_user])
+    puts "============================================"
+    puts sig_user
+    puts "============================================"
+    puts document
+    puts "============================================"
 
     if checkTimestamp(recipient_timestamp)
       # Signatur Check
       digest = OpenSSL::Digest::SHA256.new
       @user = User.find_by_name(params[:user_id])
-      key = OpenSSL::PKey::RSA.new()
-
-     # if key.verify digest, sig_user, document
+      key = OpenSSL::PKey::RSA.new(Base64.strict_decode64(@user.pubkey_user))
+      if key.verify digest, sig_user, document
+        puts "============================================"
+        puts "Signature valid"
+        puts "============================================"
         @messages = Message.where(:recipient => params[:user_id])
-      #else
+        Message.where(:recipient => params[:user_id]).destroy_all
+      else
         #Fehlermeldung Inkorrekte Signatur
-      #end
+        puts "============================================"
+        puts "Signature invalid"
+        puts "============================================"
+        render json: @status = '{"status":"503"}'
+      end
     else
-      # Fehlermeldung Timestamp inkorrekt
+      render json: @status = '{"status":"502"}'
     end
   end
 
@@ -47,7 +60,7 @@ class MessagesController < ApplicationController
 
       if checkTimestamp(@message.timestamp.to_i)
           if @message.save
-            format.html { redirect_to @message, notice: 'User was successfully created.' }
+            format.html { redirect_to @message, notice: 'Message was successfully created.' }
             format.json { render json: @status = '{"status":"200"}'}
           else
             format.html { render :new }
@@ -80,7 +93,7 @@ class MessagesController < ApplicationController
     @message.destroy
     respond_to do |format|
       format.html { redirect_to messages_url, notice: 'Message was successfully destroyed.' }
-      format.json { head :no_content }
+      format.json { render json: @status = '{"status":"200"}'}
     end
   end
 
