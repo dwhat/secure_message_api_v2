@@ -33,6 +33,10 @@ class MessagesController < ApplicationController
         render json: @status = '{"status":"503"}'
       end
     else
+      # Timestamp passt nicht
+      puts "============================================"
+      puts "Timestamp invalid"
+      puts "============================================"
       render json: @status = '{"status":"502"}'
     end
   end
@@ -60,6 +64,9 @@ class MessagesController < ApplicationController
 
       if checkTimestamp(@message.timestamp.to_i)
           if @message.save
+            puts "============================================"
+            puts "Message created"
+            puts "============================================"
             format.html { redirect_to @message, notice: 'Message was successfully created.' }
             format.json { render json: @status = '{"status":"200"}'}
           else
@@ -91,6 +98,9 @@ class MessagesController < ApplicationController
   # DELETE /messages/1.json
   def destroy
     @message.destroy
+    puts "============================================"
+    puts "Message deleted"
+    puts "============================================"
     respond_to do |format|
       format.html { redirect_to messages_url, notice: 'Message was successfully destroyed.' }
       format.json { render json: @status = '{"status":"200"}'}

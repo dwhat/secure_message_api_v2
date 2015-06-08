@@ -35,6 +35,9 @@ class UsersController < ApplicationController
         format.json { render json: @status = '{"status":"501"}' }
       else
         if @user.save
+          puts "============================================"
+          puts "User created: #{@user.name}"
+          puts "============================================"
           format.html { redirect_to @user, notice: 'User was successfully created.' }
           format.json { render json: @status = '{"status":"200"}' }
         else
@@ -62,6 +65,9 @@ class UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
+    puts "============================================"
+    puts "User destroyed: #{@user.name}"
+    puts "============================================"
     @user.destroy
     respond_to do |format|
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
