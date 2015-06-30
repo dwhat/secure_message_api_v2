@@ -29,6 +29,9 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
+
+    puts request.headers["Content-Type"]
+    
     @user = User.new(user_params)
     puts "============================================"
     puts user_params
