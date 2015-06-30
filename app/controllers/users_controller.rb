@@ -30,6 +30,9 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(user_params)
+    puts "============================================"
+    puts user_params
+    puts "============================================"
     respond_to do |format|
       if User.exists?(name: @user.name)
         format.json { render json: @status = '{"status":"501"}' }
