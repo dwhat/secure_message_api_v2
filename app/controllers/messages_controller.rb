@@ -5,7 +5,6 @@ class MessagesController < ApplicationController
   # GET /messages.json
   def index
     recipient_timestamp = params[:timestamp].to_i
-    puts params[:sig_user]
     document = params[:user_id].to_s+recipient_timestamp.to_s
     sig_user = Base64.strict_decode64(params[:sig_user])
     puts "============================================"
@@ -23,8 +22,13 @@ class MessagesController < ApplicationController
         puts "============================================"
         puts "Signature valid"
         puts "============================================"
+        Message.transaction do
         @messages = Message.where(:recipient => params[:user_id])
+        render json: @messages.to_json(only: [:sender, :cipher, :iv, :key_recipient_enc, :sig_recipient])
+        end
+        Message.transaction do
         Message.where(:recipient => params[:user_id]).destroy_all
+        end
       else
         #Fehlermeldung Inkorrekte Signatur
         puts "============================================"
@@ -63,6 +67,19 @@ class MessagesController < ApplicationController
     respond_to do |format|
 
       if checkTimestamp(@message.timestamp.to_i)
+        puts "============================================"
+        puts "Timestamp valid"
+        puts "============================================"
+        document = params[:sender].to_s + Base64.strict_decode64(params[:cipher]).to_s + Base64.strict_decode64(params[:iv]).to_s + Base64.strict_decode64(params[:key_recipient_enc]).to_s + params[:timestamp].to_s + params[:recipient].to_s
+        puts document
+        sig_service = Base64.strict_decode64(params[:sig_service])
+        digest = OpenSSL::Digest::SHA256.new
+        @user = User.find_by_name(@message.sender)
+        key = OpenSSL::PKey::RSA.new(Base64.strict_decode64(@user.pubkey_user))
+        if key.verify digest, sig_service, document
+          puts "============================================"
+          puts "Signature valid"
+          puts "============================================"
           if @message.save
             puts "============================================"
             puts "Message created"
@@ -73,8 +90,17 @@ class MessagesController < ApplicationController
             format.html { render :new }
             format.json { render json: @status = '{"status":"500"}' }
           end
+        else
+          puts "============================================"
+          puts "Signature not valid"
+          puts "============================================"
+          format.json { render json: @status = '{"status":"503"}'}
+        end
 
       else
+        puts "============================================"
+        puts "Timestamp not valid"
+        puts "============================================"
         format.json { render json: @status = '{"status":"502"}'}
       end
     end
