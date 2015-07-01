@@ -71,7 +71,6 @@ class MessagesController < ApplicationController
         puts "Timestamp valid"
         puts "============================================"
         document = params[:sender].to_s + Base64.decode64(params[:cipher]).to_s + Base64.decode64(params[:iv]).to_s + Base64.decode64(params[:key_recipient_enc]).to_s + params[:timestamp].to_s + params[:recipient].to_s
-        puts document
         sig_service = Base64.decode64(params[:sig_service])
         digest = OpenSSL::Digest::SHA256.new
         @user = User.find_by_name(@message.sender)
