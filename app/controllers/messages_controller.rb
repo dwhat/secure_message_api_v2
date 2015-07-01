@@ -6,7 +6,7 @@ class MessagesController < ApplicationController
   def index
     recipient_timestamp = params[:timestamp].to_i
     document = params[:user_id].to_s+recipient_timestamp.to_s
-    sig_user = Base64.strict_decode64(params[:sig_user])
+    sig_user = Base64.decode64(params[:sig_user])
     puts "============================================"
     puts sig_user
     puts "============================================"
@@ -17,7 +17,7 @@ class MessagesController < ApplicationController
       # Signatur Check
       digest = OpenSSL::Digest::SHA256.new
       @user = User.find_by_name(params[:user_id])
-      key = OpenSSL::PKey::RSA.new(Base64.strict_decode64(@user.pubkey_user))
+      key = OpenSSL::PKey::RSA.new(Base64.decode64(@user.pubkey_user))
       if key.verify digest, sig_user, document
         puts "============================================"
         puts "Signature valid"
@@ -70,12 +70,12 @@ class MessagesController < ApplicationController
         puts "============================================"
         puts "Timestamp valid"
         puts "============================================"
-        document = params[:sender].to_s + Base64.strict_decode64(params[:cipher]).to_s + Base64.strict_decode64(params[:iv]).to_s + Base64.strict_decode64(params[:key_recipient_enc]).to_s + params[:timestamp].to_s + params[:recipient].to_s
+        document = params[:sender].to_s + Base64.decode64(params[:cipher]).to_s + Base64.decode64(params[:iv]).to_s + Base64.decode64(params[:key_recipient_enc]).to_s + params[:timestamp].to_s + params[:recipient].to_s
         puts document
-        sig_service = Base64.strict_decode64(params[:sig_service])
+        sig_service = Base64.decode64(params[:sig_service])
         digest = OpenSSL::Digest::SHA256.new
         @user = User.find_by_name(@message.sender)
-        key = OpenSSL::PKey::RSA.new(Base64.strict_decode64(@user.pubkey_user))
+        key = OpenSSL::PKey::RSA.new(Base64.decode64(@user.pubkey_user))
         if key.verify digest, sig_service, document
           puts "============================================"
           puts "Signature valid"
