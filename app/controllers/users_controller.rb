@@ -32,7 +32,11 @@ class UsersController < ApplicationController
 
     @user = User.new(user_params)
     puts "============================================"
-    puts user_params
+    # puts user_params
+    puts "User name: #{@user.name}"
+    puts "salt-masterkey: #{@user.salt_masterkey}"
+    puts "publicKey:: #{@user.pubkey_user}"
+    puts "PrivateKey-Enc: #{@user.privkey_user_enc}"
     puts "============================================"
     respond_to do |format|
       if User.exists?(name: @user.name)
@@ -41,6 +45,9 @@ class UsersController < ApplicationController
         if @user.save
           puts "============================================"
           puts "User created: #{@user.name}"
+          puts "salt-masterkey: #{@user.salt_masterkey}"
+          puts "publicKey:: #{@user.pubkey_user}"
+          puts "PrivateKey-Enc: #{@user.privkey_user_enc}"
           puts "============================================"
           format.html { redirect_to @user, notice: 'User was successfully created.' }
           format.json { render json: @status = '{"status":"200"}' }

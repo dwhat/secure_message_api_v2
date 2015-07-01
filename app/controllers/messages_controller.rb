@@ -8,9 +8,9 @@ class MessagesController < ApplicationController
     document = params[:user_id].to_s+recipient_timestamp.to_s
     sig_user = Base64.decode64(params[:sig_user])
     puts "============================================"
-    puts sig_user
+    puts "Digitale Signatur, welche vom Client geschickt wurde: #{sig_user}"
     puts "============================================"
-    puts document
+    puts "Username und Empfänger Timestamp: #{document}"
     puts "============================================"
 
     if checkTimestamp(recipient_timestamp)
@@ -26,22 +26,28 @@ class MessagesController < ApplicationController
         @messages = Message.where(:recipient => params[:user_id])
         render json: @messages.to_json(only: [:sender, :cipher, :iv, :key_recipient_enc, :sig_recipient])
         end
+        puts "============================================"
+        puts "Nachricht abgerufen und in JSON gerendert."
+        puts "============================================"
         Message.transaction do
         Message.where(:recipient => params[:user_id]).destroy_all
         end
+        puts "============================================"
+        puts "Abgerufene Nachrichten des Users aus der Datenbank gelöscht."
+        puts "============================================"
       else
         #Fehlermeldung Inkorrekte Signatur
+        render json: @status = '{"status":"503"}'
         puts "============================================"
         puts "Signature invalid"
         puts "============================================"
-        render json: @status = '{"status":"503"}'
       end
     else
       # Timestamp passt nicht
+      render json: @status = '{"status":"502"}'
       puts "============================================"
       puts "Timestamp invalid"
       puts "============================================"
-      render json: @status = '{"status":"502"}'
     end
   end
 
@@ -68,7 +74,7 @@ class MessagesController < ApplicationController
 
       if checkTimestamp(@message.timestamp.to_i)
         puts "============================================"
-        puts "Timestamp valid"
+        puts "Timestamp valid (weicht nicht mehr als 5 Minuten ab)"
         puts "============================================"
         document = params[:sender].to_s + Base64.decode64(params[:cipher]).to_s + Base64.decode64(params[:iv]).to_s + Base64.decode64(params[:key_recipient_enc]).to_s + params[:timestamp].to_s + params[:recipient].to_s
         sig_service = Base64.decode64(params[:sig_service])
@@ -82,6 +88,7 @@ class MessagesController < ApplicationController
           if @message.save
             puts "============================================"
             puts "Message created"
+            puts "Verschlüsselter Nachrichten Text: #{@message.cipher}"
             puts "============================================"
             format.html { redirect_to @message, notice: 'Message was successfully created.' }
             format.json { render json: @status = '{"status":"200"}'}
@@ -90,17 +97,16 @@ class MessagesController < ApplicationController
             format.json { render json: @status = '{"status":"500"}' }
           end
         else
+          format.json { render json: @status = '{"status":"503"}'}
           puts "============================================"
           puts "Signature not valid"
           puts "============================================"
-          format.json { render json: @status = '{"status":"503"}'}
         end
-
       else
+        format.json { render json: @status = '{"status":"502"}'}
         puts "============================================"
         puts "Timestamp not valid"
         puts "============================================"
-        format.json { render json: @status = '{"status":"502"}'}
       end
     end
   end

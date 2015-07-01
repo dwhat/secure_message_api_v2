@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/secure_message_api_v2.iml" filepath="$PROJECT_DIR$/.idea/secure_message_api_v2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../end-to-end_v2/.idea/web_client.iml" filepath="$PROJECT_DIR$/../end-to-end_v2/.idea/web_client.iml" />
     </modules>
   </component>
 </project>
